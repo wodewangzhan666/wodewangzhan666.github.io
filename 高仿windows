@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>高仿Windows 11</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  
+  <!-- 配置Tailwind自定义主题 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'win-blue': '#0078D4',
+            'win-gray': '#F3F3F3',
+            'win-dark': '#1C1C1C',
+            'win-taskbar': '#1E1E1E80',
+            'win-start': '#303030',
+            'win-hover': '#3A3A3A',
+          },
+          fontFamily: {
+            'segoe': ['Segoe UI', 'system-ui', 'sans-serif'],
+          },
+          boxShadow: {
+            'win': '0 4px 20px rgba(0, 0, 0, 0.3)',
+            'win-light': '0 2px 10px rgba(0, 0, 0, 0.1)',
+          }
+        },
+      }
+    }
+  </script>
+  
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .glass {
+        backdrop-filter: blur(12px);
+      }
+      .taskbar-icon {
+        @apply flex items-center justify-center w-10 h-10 rounded-md hover:bg-white/20 transition-all duration-150;
+      }
+      .window {
+        @apply absolute bg-white rounded-lg shadow-win overflow-hidden transition-all duration-300 border border-gray-200;
+      }
+      .window-header {
+        @apply bg-gray-50 px-4 py-2 flex items-center justify-between cursor-move border-b border-gray-200;
+      }
+      .window-btn {
+        @apply w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-200 transition-colors duration-150;
+      }
+      .start-menu-item {
+        @apply flex items-center gap-3 px-4 py-2 hover:bg-win-hover rounded-md transition-colors duration-150 cursor-pointer;
+      }
+      .tile {
+        @apply flex flex-col items-center justify-center p-3 rounded-lg hover:bg-white/10 transition-all duration-150 cursor-pointer;
+      }
+    }
+  </style>
+</head>
+
+<body class="font-segoe bg-[url('https://picsum.photos/id/1015/1920/1080')] bg-cover bg-center min-h-screen overflow-hidden text-white">
+  <!-- 桌面图标 -->
+  <div class="absolute top-8 left-8 flex flex-col gap-6 select-none">
+    <div class="flex flex-col items-center w-20 cursor-pointer hover:text-win-blue transition-colors">
+      <i class="fa fa-file-excel-o text-3xl mb-1"></i>
+      <span class="text-sm text-center">文档.xlsx</span>
+    </div>
+    <div class="flex flex-col items-center w-20 cursor-pointer hover:text-win-blue transition-colors">
+      <i class="fa fa-file-word-o text-3xl mb-1"></i>
+      <span class="text-sm text-center">报告.docx</span>
+    </div>
+    <div class="flex flex-col items-center w-20 cursor-pointer hover:text-win-blue transition-colors">
+      <i class="fa fa-folder text-3xl mb-1"></i>
+      <span class="text-sm text-center">下载</span>
+    </div>
+    <div class="flex flex-col items-center w-20 cursor-pointer hover:text-win-blue transition-colors">
+      <i class="fa fa-google text-3xl mb-1"></i>
+      <span class="text-sm text-center">Chrome</span>
+    </div>
+  </div>
+
+  <!-- 任务栏 -->
+  <div id="taskbar" class="fixed bottom-0 left-0 right-0 h-14 bg-win-taskbar glass border-t border-white/10 flex items-center px-4">
+    <!-- 开始菜单按钮 -->
+    <div id="startBtn" class="taskbar-icon mr-2">
+      <i class="fa fa-windows text-xl"></i>
+    </div>
+    
+    <!-- 任务栏图标 -->
+    <div class="flex items-center gap-1">
+      <div class="taskbar-icon border-b-2 border-win-blue">
+        <i class="fa fa-file-text-o"></i>
+      </div>
+      <div class="taskbar-icon">
+        <i class="fa fa-internet-explorer"></i>
+      </div>
+      <div class="taskbar-icon">
+        <i class="fa fa-file-image-o"></i>
+      </div>
+    </div>
+    
+    <!-- 右侧系统托盘 -->
+    <div class="ml-auto flex items-center gap-1">
+      <div class="taskbar-icon">
+        <i class="fa fa-volume-up"></i>
+      </div>
+      <div class="taskbar-icon">
+        <i class="fa fa-wifi"></i>
+      </div>
+      <div class="taskbar-icon flex flex-col items-center justify-center">
+        <span class="text-xs font-medium">14:30</span>
+        <span class="text-[10px]">周日</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 开始菜单 -->
+  <div id="startMenu" class="fixed bottom-14 left-4 w-80 h-[500px] bg-win-start rounded-xl shadow-win transform translate-y-full opacity-0 transition-all duration-300 pointer-events-none">
+    <!-- 左侧应用列表 -->
+    <div class="flex h-full">
+      <div class="w-2/3 p-3 overflow-y-auto">
+        <div class="start-menu-item">
+          <i class="fa fa-file-text-o text-xl w-6"></i>
+          <span>记事本</span>
+        </div>
+        <div class="start-menu-item">
+          <i class="fa fa-paint-brush text-xl w-6"></i>
+          <span>画图</span>
+        </div>
+        <div class="start-menu-item">
+          <i class="fa fa-calculator text-xl w-6"></i>
+          <span>计算器</span>
+        </div>
+        <div class="start-menu-item">
+          <i class="fa fa-internet-explorer text-xl w-6"></i>
+          <span>浏览器</span>
+        </div>
+        <div class="start-menu-item">
+          <i class="fa fa-file-excel-o text-xl w-6"></i>
+          <span>Excel</span>
+        </div>
+        <div class="start-menu-item">
+          <i class="fa fa-file-word-o text-xl w-6"></i>
+          <span>Word</span>
+        </div>
+      </div>
+      
+      <!-- 右侧固定应用 -->
+      <div class="w-1/3 bg-win-dark border-l border-gray-700 p-3">
+        <h4 class="text-xs uppercase text-gray-400 mb-2">固定</h4>
+        <div class="grid grid-cols-3 gap-2">
+          <div class="tile">
+            <i class="fa fa-windows text-2xl"></i>
+            <span class="text-xs mt-1">设置</span>
+          </div>
+          <div class="tile">
+            <i class="fa fa-search text-2xl"></i>
+            <span class="text-xs mt-1">搜索</span>
+          </div>
+          <div class="tile">
+            <i class="fa fa-photo text-2xl"></i>
+            <span class="text-xs mt-1">照片</span>
+          </div>
+          <div class="tile">
+            <i class="fa fa-music text-2xl"></i>
+            <span class="text-xs mt-1">音乐</span>
+          </div>
+          <div class="tile">
+            <i class="fa fa-film text-2xl"></i>
+            <span class="text-xs mt-1">视频</span>
+          </div>
+          <div class="tile">
+            <i class="fa fa-store text-2xl"></i>
+            <span class="text-xs mt-1">应用商店</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 窗口示例 - 记事本 -->
+  <div id="notepad" class="window w-[600px] h-[400px] top-[100px] left-[200px] z-10">
+    <div class="window-header" onmousedown="startDrag(event, 'notepad')">
+      <div class="flex items-center gap-2">
+        <i class="fa fa-file-text-o text-gray-700"></i>
+        <span class="text-gray-800 text-sm">无标题 - 记事本</span>
+      </div>
+      <div class="flex items-center gap-1">
+        <div class="window-btn" onclick="minimizeWindow('notepad')">
+          <i class="fa fa-window-minimize text-xs text-gray-700"></i>
+        </div>
+        <div class="window-btn" onclick="maximizeWindow('notepad')">
+          <i class="fa fa-window-maximize text-xs text-gray-700"></i>
+        </div>
+        <div class="window-btn hover:bg-red-500 hover:text-white" onclick="closeWindow('notepad')">
+          <i class="fa fa-times text-xs text-gray-700"></i>
+        </div>
+      </div>
+    </div>
+    <div class="p-4 h-[calc(100%-40px)] bg-white">
+      <textarea class="w-full h-full border-none outline-none resize-none text-gray-800" placeholder="在此处输入文字..."></textarea>
+    </div>
+  </div>
+
+  <!-- 窗口示例 - 计算器 -->
+  <div id="calculator" class="window w-[300px] h-[400px] top-[150px] left-[850px] z-20">
+    <div class="window-header" onmousedown="startDrag(event, 'calculator')">
+      <div class="flex items-center gap-2">
+        <i class="fa fa-calculator text-gray-700"></i>
+        <span class="text-gray-800 text-sm">计算器</span>
+      </div>
+      <div class="flex items-center gap-1">
+        <div class="window-btn" onclick="minimizeWindow('calculator')">
+          <i class="fa fa-window-minimize text-xs text-gray-700"></i>
+        </div>
+        <div class="window-btn" onclick="maximizeWindow('calculator')">
+          <i class="fa fa-window-maximize text-xs text-gray-700"></i>
+        </div>
+        <div class="window-btn hover:bg-red-500 hover:text-white" onclick="closeWindow('calculator')">
+          <i class="fa fa-times text-xs text-gray-700"></i>
+        </div>
+      </div>
+    </div>
+    <div class="bg-gray-100 p-2 h-[calc(100%-40px)]">
+      <div class="bg-white h-16 rounded-md mb-2 flex items-end justify-end p-2 text-right text-2xl font-light text-gray-800">0</div>
+      <div class="grid grid-cols-4 gap-2">
+        <button class="bg-gray-200 hover:bg-gray-300 h-10 rounded-md transition-colors">C</button>
+        <button class="bg-gray-200 hover:bg-gray-300 h-10 rounded-md transition-colors">±</button>
+        <button class="bg-gray-200 hover:bg-gray-300 h-10 rounded-md transition-colors">%</button>
+        <button class="bg-orange-500 text-white hover:bg-orange-600 h-10 rounded-md transition-colors">÷</button>
+        
+        <button class="bg-gray-300 hover:bg-gray-400 h-10 rounded-md transition-colors">7</button>
+        <button class="bg-gray-300 hover:bg-gray-400 h-10 rounded-md transition-colors">8</button>
+        <button class="bg-gray-300 hover:bg-gray-400 h-10 rounded-md transition-colors">9</button>
+        <button class="bg-orange-500 text-white hover:bg-orange-600 h-10 rounded-md transition-colors">×</button>
+        
+        <button class="bg-gray-300 hover:bg-gray-400 h-10 rounded-md transition-colors">4</button>
+        <button class="bg-gray-300 hover:bg-gray-400 h-10 rounded-md transition-colors">5</button>
+        <button class="bg-gray-300 hover:bg-gray-400 h-10 rounded-md transition-colors">6</button>
+        <button class="bg-orange-500 text-white hover:bg-orange-600 h-10 rounded-md transition-colors">-</button>
+        
+        <button class="bg-gray-300 hover:bg-gray-400 h-10 rounded-md transition-colors">1</button>
+        <button class="bg-gray-300 hover:bg-gray-400 h-10 rounded-md transition-colors">2</button>
+        <button class="bg-gray-300 hover:bg-gray-400 h-10 rounded-md transition-colors">3</button>
+        <button class="bg-orange-500 text-white hover:bg-orange-600 h-10 rounded-md transition-colors">+</button>
+        
+        <button class="bg-gray-300 hover:bg-gray-400 h-10 rounded-md transition-colors col-span-2">0</button>
+        <button class="bg-gray-300 hover:bg-gray-400 h-10 rounded-md transition-colors">.</button>
+        <button class="bg-orange-500 text-white hover:bg-orange-600 h-10 rounded-md transition-colors">=</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 开始菜单切换
+    const startBtn = document.getElementById('startBtn');
+    const startMenu = document.getElementById('startMenu');
+    let startMenuOpen = false;
+    
+    startBtn.addEventListener('click', () => {
+      startMenuOpen = !startMenuOpen;
+      if (startMenuOpen) {
+        startMenu.classList.remove('translate-y-full', 'opacity-0', 'pointer-events-none');
+        startMenu.classList.add('translate-y-0', 'opacity-100', 'pointer-events-auto');
+      } else {
+        startMenu.classList.add('translate-y-full', 'opacity-0', 'pointer-events-none');
+        startMenu.classList.remove('translate-y-0', 'opacity-100', 'pointer-events-auto');
+      }
+    });
+    
+    // 点击桌面关闭开始菜单
+    document.addEventListener('click', (e) => {
+      if (!startMenu.contains(e.target) && e.target !== startBtn) {
+        startMenuOpen = false;
+        startMenu.classList.add('translate-y-full', 'opacity-0', 'pointer-events-none');
+        startMenu.classList.remove('translate-y-0', 'opacity-100', 'pointer-events-auto');
+      }
+    });
+    
+    // 窗口拖拽功能
+    let dragging = false;
+    let currentWindow = null;
+    let offsetX, offsetY;
+    
+    function startDrag(e, windowId) {
+      e.preventDefault();
+      currentWindow = document.getElementById(windowId);
+      
+      // 确保当前窗口在最上层
+      const windows = document.querySelectorAll('.window');
+      windows.forEach(win => {
+        win.style.zIndex = '10';
+      });
+      currentWindow.style.zIndex = '100';
+      
+      const rect = currentWindow.getBoundingClientRect();
+      offsetX = e.clientX - rect.left;
+      offsetY = e.clientY - rect.top;
+      
+      dragging = true;
+      
+      // 添加事件监听
+      document.addEventListener('mousemove', drag);
+      document.addEventListener('mouseup', stopDrag);
+    }
+    
+    function drag(e) {
+      if (!dragging || !currentWindow) return;
+      
+      const x = e.clientX - offsetX;
+      const y = e.clientY - offsetY;
+      
+      // 限制窗口在可视区域内
+      const maxX = window.innerWidth - currentWindow.offsetWidth;
+      const maxY = window.innerHeight - currentWindow.offsetHeight;
+      
+      const constrainedX = Math.max(0, Math.min(x, maxX));
+      const constrainedY = Math.max(0, Math.min(y, maxY));
+      
+      currentWindow.style.left = `${constrainedX}px`;
+      currentWindow.style.top = `${constrainedY}px`;
+    }
+    
+    function stopDrag() {
+      dragging = false;
+      currentWindow = null;
+      
+      // 移除事件监听
+      document.removeEventListener('mousemove', drag);
+      document.removeEventListener('mouseup', stopDrag);
+    }
+    
+    // 窗口控制函数
+    function minimizeWindow(windowId) {
+      const win = document.getElementById(windowId);
+      win.style.transform = 'scale(0.95) translateY(100vh)';
+      win.style.opacity = '0';
+      
+      setTimeout(() => {
+        win.style.display = 'none';
+      }, 300);
+    }
+    
+    function maximizeWindow(windowId) {
+      const win = document.getElementById(windowId);
+      const isMaximized = win.classList.contains('maximized');
+      
+      if (isMaximized) {
+        // 恢复原始大小
+        win.classList.remove('maximized');
+        win.style.width = win.dataset.originalWidth;
+        win.style.height = win.dataset.originalHeight;
+        win.style.left = win.dataset.originalLeft;
+        win.style.top = win.dataset.originalTop;
+        win.querySelector('.fa-window-maximize').classList.remove('fa-window-restore');
+        win.querySelector('.fa-window-maximize').classList.add('fa-window-maximize');
+      } else {
+        // 最大化窗口
+        win.dataset.originalWidth = win.style.width;
+        win.dataset.originalHeight = win.style.height;
+        win.dataset.originalLeft = win.style.left;
+        win.dataset.originalTop = win.style.top;
+        
+        win.classList.add('maximized');
+        win.style.width = 'calc(100% - 20px)';
+        win.style.height = 'calc(100% - 80px)';
+        win.style.left = '10px';
+        win.style.top = '10px';
+        
+        win.querySelector('.fa-window-maximize').classList.remove('fa-window-maximize');
+        win.querySelector('.fa-window-maximize').classList.add('fa-window-restore');
+      }
+    }
+    
+    function closeWindow(windowId) {
+      const win = document.getElementById(windowId);
+      win.style.transform = 'scale(0.8)';
+      win.style.opacity = '0';
+      
+      setTimeout(() => {
+        win.remove();
+      }, 300);
+    }
+    
+    // 双击窗口标题栏最大化/还原
+    document.querySelectorAll('.window-header').forEach(header => {
+      header.addEventListener('dblclick', (e) => {
+        const windowId = e.currentTarget.closest('.window').id;
+        maximizeWindow(windowId);
+      });
+    });
+    
+    // 模拟EXE文件点击效果（仅视觉反馈）
+    document.querySelectorAll('.tile, .start-menu-item').forEach(item => {
+      item.addEventListener('click', () => {
+        // 关闭开始菜单
+        startMenuOpen = false;
+        startMenu.classList.add('translate-y-full', 'opacity-0', 'pointer-events-none');
+        startMenu.classList.remove('translate-y-0', 'opacity-100', 'pointer-events-auto');
+        
+        // 简单的加载动画
+        const loading = document.createElement('div');
+        loading.className = 'fixed inset-0 bg-black/50 flex items-center justify-center z-500';
+        loading.innerHTML = `
+          <div class="bg-white p-6 rounded-lg shadow-win">
+            <div class="w-12 h-12 border-4 border-gray-200 border-t-win-blue rounded-full animate-spin mx-auto"></div>
+            <p class="mt-4 text-gray-800 text-center">正在启动应用...</p>
+          </div>
+        `;
+        document.body.appendChild(loading);
+        
+        // 2秒后移除加载动画
+        setTimeout(() => {
+          loading.remove();
+        }, 2000);
+      });
+    });
+  </script>
+</body>
+</html>
